@@ -13,7 +13,7 @@ RGBA = np.random.randint(low=0, high=255, size=(224, 244, 4)).astype(np.uint8)
 @pytest.mark.parametrize("is_rgba", [True, False])
 @pytest.mark.parametrize("colorspace", [qoi.QOIColorSpace.SRGB, qoi.QOIColorSpace.LINEAR, None])
 def test_write_read(tmp_path: Path, is_path: bool, colorspace: qoi.QOIColorSpace, is_rgba: bool):
-    tmp_path = str(tmp_path) + "tmp.qoi"
+    tmp_path = f"{str(tmp_path)}tmp.qoi"
     img = RGBA if is_rgba else RGB
     if is_path:
         tmp_path = Path(tmp_path)
@@ -30,10 +30,7 @@ def test_write_read(tmp_path: Path, is_path: bool, colorspace: qoi.QOIColorSpace
 @pytest.mark.parametrize("colorspace", [qoi.QOIColorSpace.SRGB, qoi.QOIColorSpace.LINEAR, None])
 def test_encode_decode(colorspace: qoi.QOIColorSpace, is_rgba: bool):
     img = RGBA if is_rgba else RGB
-    if colorspace is None:
-        bites = qoi.encode(img)
-    else:
-        bites = qoi.encode(img, colorspace)
+    bites = qoi.encode(img) if colorspace is None else qoi.encode(img, colorspace)
     img_decoded = qoi.decode(bites)
     assert np.array_equal(img, img_decoded)
 
@@ -42,10 +39,7 @@ def test_encode_decode(colorspace: qoi.QOIColorSpace, is_rgba: bool):
 @pytest.mark.parametrize("colorspace", [qoi.QOIColorSpace.SRGB, qoi.QOIColorSpace.LINEAR, None])
 def test_encode_decode_with_colorspace(colorspace: qoi.QOIColorSpace, is_rgba: bool):
     img = RGBA if is_rgba else RGB
-    if colorspace is None:
-        bites = qoi.encode(img)
-    else:
-        bites = qoi.encode(img, colorspace)
+    bites = qoi.encode(img) if colorspace is None else qoi.encode(img, colorspace)
     data = bytearray(1)
     img_decoded = qoi.decode(bites, colorspace=data)
     if colorspace is not None:
@@ -60,7 +54,7 @@ def test_version():
 
 
 def test_writes_without_extension(tmp_path):
-    qoi.write(str(tmp_path) + "tmp", RGB, qoi.QOIColorSpace.SRGB)
+    qoi.write(f"{str(tmp_path)}tmp", RGB, qoi.QOIColorSpace.SRGB)
 
 
 def test_benchmark():

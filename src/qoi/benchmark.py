@@ -223,20 +223,13 @@ def totable(results: List[TestResult]):
     items.insert(0, pretty_names)
 
     # Get max length:
-    maxlens = {}
-    for k in items[0]:
-        maxlens[k] = max(len(item[k]) for item in items)
-
+    maxlens = {k: max(len(item[k]) for item in items) for k in items[0]}
     # Print:
     for idx, item in enumerate(items):
-        vals = []
-        for k in pretty_names:
-            vals.append(item[k].ljust(maxlens[k]))
+        vals = [item[k].ljust(maxlens[k]) for k in pretty_names]
         print("| " + " | ".join(vals) + " |")
         if idx == 0:
-            vals = []
-            for k in pretty_names:
-                vals.append("-" * maxlens[k])
+            vals = ["-" * maxlens[k] for k in pretty_names]
             print("| " + " | ".join(vals) + " |")
 
 
